@@ -34,20 +34,6 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
 
 
-### 测试
-
-安装依赖：
-
-pip install httpx
-
-pip install pytest
-
-完成后在终端输入pytest运行测试即可，每次运行测试都会清空并重置一次数据库
-
-测试用例及函数在test_main文件中
-
-测试方式参考：https://fastapi.tiangolo.com/zh/tutorial/testing/#_5
-
 ### 两张表
 
 1. users
@@ -61,6 +47,14 @@ pip install pytest
    
 
 1. videos
+
+   | bv       | type     | like     | coin     | url      |
+   | -------- | -------- | -------- | -------- | -------- |
+   | Integer  | Integer  | Interger | Interger | String   |
+   | 主键     |          |          |          |          |
+   | NOT NULL | NOT NULL | NOT NULL | NOT NULL | NOT NULL |
+
+   
 
 
 
@@ -96,3 +90,15 @@ pip install pytest
    "coin": int
 
    }
+
+TODO
+
+1./video/like
+
+2./video/coin
+
+3./video/hot
+
+4./video/name 
+
+5./video/homepage 
