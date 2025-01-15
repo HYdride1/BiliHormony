@@ -10,4 +10,11 @@ class User(Base):
     like = Column(String(255))
     coin = Column(Integer, nullable=False)
 
-
+class Video(Base):
+    __tablename__ = "video"
+    bv = Column(Integer, primary_key=True, index=True, nullable= False)
+    name = Column(String(255),index=True, nullable=False)
+    type = Column(Integer, nullable=False)
+    like = Column(Integer, nullable=False)
+    coin = Column(Integer, nullable=False)
+    url = Column(String, nullable=False)

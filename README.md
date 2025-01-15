@@ -48,11 +48,11 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
 1. videos
 
-   | bv       | type     | like     | coin     | url      |
-   | -------- | -------- | -------- | -------- | -------- |
-   | Integer  | Integer  | Interger | Interger | String   |
-   | 主键     |          |          |          |          |
-   | NOT NULL | NOT NULL | NOT NULL | NOT NULL | NOT NULL |
+   | bv       | name   | type     | like     | coin     | url      |
+   | -------- | ------ | -------- | -------- | -------- | -------- |
+   | Integer  | String | Integer  | Interger | Interger | String   |
+   | 主键     |        |          |          |          |          |
+   | NOT NULL | NOT    | NOT NULL | NOT NULL | NOT NULL | NOT NULL |
 
    
 
