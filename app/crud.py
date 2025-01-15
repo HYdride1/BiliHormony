@@ -27,3 +27,14 @@ def get_user_details(db: Session, account: str):
     if not user:
         return None
     return {"like": user.like, "coin": user.coin}
+
+def create_video(db: Session, video:schemas.VideoCreate):
+    db_video = models.Video(name=video.name,
+                          url=video.url,)
+    db.add(db_video)
+    db.commit()
+    db.refresh(db_video)
+    return db_video
+
+def get_video_by_bv(db: Session, bv: int):
+    return db.query(models.User).filter(models.Video.bv == bv).first()

@@ -75,5 +75,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
 async def get_user_detail(user_detail_request: schemas.UserDetailRequest, db: Session = Depends(get_db)):
     user_details = crud.get_user_details(db, account=user_detail_request.account)
     if not user_details:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404,detail="User not found")
     return schemas.UserDetailResponse(**user_details)
+
+@app.post("/video/bv")
+async def get_video_by_bv(video: schemas.VideoBv, db: Session = Depends(get_db)):
+    target_video = crud.get_video_by_bv(db,bv = video.bv)
+    if not target_video:
+        raise HTTPException(status_code=404, detail="Video not found")
+    return target_video

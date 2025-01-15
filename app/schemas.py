@@ -19,3 +19,18 @@ class UserDetailRequest(BaseModel):
 class UserDetailResponse(BaseModel):
     like: Optional[str] = ""  # 为 like 字段设置默认值 ""
     coin: int
+
+class VideoBase(BaseModel):
+    url: str
+    name: str
+
+class VideoCreate(VideoBase):
+    pass
+
+class Video(VideoBase):
+    like : int = 0
+    coin : int = 0
+    type : int = 1
+
+class VideoBv(BaseModel):
+    bv : int
