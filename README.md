@@ -32,7 +32,15 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
 完成了鉴权机制，密码加密存储
 
+### 测试
 
+安装httpx 和pytest
+
+`pip install httpx`
+
+`pip install pytest`
+
+之后终端运行pytest就可以按照test_main里的测试用例进行测试了,目前每次测试会在测试前重置数据库
 
 ### 两张表
 
