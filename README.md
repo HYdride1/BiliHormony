@@ -99,22 +99,22 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    }
 
-### TODO  视频的URL
+### TODOLIST  视频的URL
 
-1. 视频的点赞：/video/like
+几个问题：有几个需求应该是返回数个json，还有视频封面如何处理犹未可知
+
+1. 根据bv号返回视频的点赞：/video/like
 
    服务端返回的json格式为
    {
-   "bv": int
+   "like": int
 
    }
 
-2. 视频的投币：/video/coin
+2. 根据bv号返回视频的投币：/video/coin
 
    服务端返回的json格式为
    {
-
-   "account":str
 
    "bv": int
 
@@ -144,7 +144,7 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    "name": str
 
-   }
+   }，这里应该是根据name进行查询，把含有name的所有视频都返回吗
 
 5. 主页：/video/homepage
 
@@ -185,4 +185,4 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    }
 
-8.后端创建视频，接受前端url创建视频？
+8.后端创建视频，接受前端url创建视频 done
