@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-
+from sqlalchemy import desc
+from sqlalchemy import func
 from app import models,schemas
 
 
@@ -37,4 +38,13 @@ def create_video(db: Session, video:schemas.VideoCreate):
     return db_video
 
 def get_video_by_bv(db: Session, bv: int):
-    return db.query(models.User).filter(models.Video.bv == bv).first()
+    return db.query(models.Video).filter(models.Video.bv == bv).first()
+
+def get_hot_videos(db: Session):
+    return db.query(models.Video).order_by(desc(models.Video.video_like)).limit(10).all()
+
+def get_random_videos_by_num(db: Session, num = 8):
+    return db.query(models.Video).order_by(func.random()).limit(num).all()
+
+def get_videos_by_type(db: Session,type):
+    return db.query(models.Video).filter(models.Video.type == type).all()

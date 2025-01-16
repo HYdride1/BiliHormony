@@ -8,25 +8,30 @@ from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from passlib.hash import bcrypt
 
+from typing import List
 from app import models, schemas
 from app import crud, security
 from app.database import SessionLocal, engine
+from app.schemas import VideoResponse
 from app.security import Token
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-#Dependency
+
+# Dependency
 def get_db():
     db = SessionLocal()
-    try :
+    try:
         yield db
     finally:
         db.close()
 
+
 # 密码哈希上下文
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 # 验证用户
 def verify_user(db: Session, username: str, password: str):
@@ -34,6 +39,7 @@ def verify_user(db: Session, username: str, password: str):
     if not user or not pwd_context.verify(password, user.password):
         return False
     return user
+
 
 # 生成令牌
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(hours=1)):
@@ -43,15 +49,16 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(hours=1
     encoded_jwt = jwt.encode(to_encode, security.SECURITY_KEY, algorithm=security.ALGORITHMS)
     return encoded_jwt
 
+
 # 登录逻辑
 def login_user(db: Session, form_data: OAuth2PasswordRequestForm):
     user = verify_user(db, form_data.username, form_data.password)
     if not user:
-        raise HTTPException(status_code=401, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
+        raise HTTPException(status_code=401, detail="Incorrect username or password",
+                            headers={"WWW-Authenticate": "Bearer"})
     access_token_expires = timedelta(hours=1)
     access_token = create_access_token(data={"sub": user.account}, expires_delta=access_token_expires)
     return {"account": user.account, "access_token": access_token, "token_type": "bearer"}
-
 
 
 # 用户注册功能
@@ -64,6 +71,7 @@ def post_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     user.password = hashed_password
     return crud.create_user(db=db, user=user)
 
+
 # 用户登录功能
 @app.post("/users/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -75,12 +83,38 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
 async def get_user_detail(user_detail_request: schemas.UserDetailRequest, db: Session = Depends(get_db)):
     user_details = crud.get_user_details(db, account=user_detail_request.account)
     if not user_details:
-        raise HTTPException(status_code=404,detail="User not found")
+        raise HTTPException(status_code=404, detail="User not found")
     return schemas.UserDetailResponse(**user_details)
+
 
 @app.post("/video/bv")
 async def get_video_by_bv(video: schemas.VideoBv, db: Session = Depends(get_db)):
-    target_video = crud.get_video_by_bv(db,bv = video.bv)
+    target_video = crud.get_video_by_bv(db, bv=video.bv)
     if not target_video:
         raise HTTPException(status_code=404, detail="Video not found")
     return target_video
+
+
+@app.post("/video/hot", response_model=List[VideoResponse])
+def get_hot_videos(db: Session = Depends(get_db)):
+    # 查询点赞数最多的10个视频
+    hot_videos = crud.get_hot_videos(db);
+    if not hot_videos:
+        raise HTTPException(status_code=404, detail="Video not found")
+    return hot_videos
+
+
+@app.post("/video/homepage", response_model=List[VideoResponse])
+def get_homepage_videos(account:str,db: Session = Depends(get_db)):
+    homepage_videos = crud.get_random_videos_by_num(db, num=8)
+    if not homepage_videos:
+        raise HTTPException(status_code=404, detail="Video not found")
+    return homepage_videos
+
+
+@app.post("/video/cate", response_model=List[VideoResponse])
+def get_cate_videos(video: schemas.VideoType, db: Session = Depends(get_db)):
+    cate_videos = crud.get_videos_by_type(db, video.type)
+    if not cate_videos:
+        raise HTTPException(status_code=404, detail="Video not found")
+    return cate_videos

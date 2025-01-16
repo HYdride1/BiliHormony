@@ -1,36 +1,58 @@
 from typing import Optional
 from pydantic import BaseModel
 
+
 class UserBase(BaseModel):
     account: str
     password: str
 
+
 class UserCreate(UserBase):
     pass
+
 
 class User(UserBase):
     u_id: int
     like: Optional[str] = ""
     coin: int = 100  # 为 coin 字段设置默认值 100
 
+
 class UserDetailRequest(BaseModel):
     account: str
+
 
 class UserDetailResponse(BaseModel):
     like: Optional[str] = ""  # 为 like 字段设置默认值 ""
     coin: int
 
+
 class VideoBase(BaseModel):
     url: str
     name: str
 
+
 class VideoCreate(VideoBase):
     pass
 
+
 class Video(VideoBase):
-    video_like : int = 0
-    coin : int = 0
-    type : int = 1
+    video_like: int = 0
+    coin: int = 0
+    type: int = 1
+
 
 class VideoBv(BaseModel):
-    bv : int
+    bv: int
+
+
+class VideoResponse(BaseModel):
+    bv: int
+    type: int
+    name: str
+    like: int
+    coin: int
+    url: str
+
+
+class VideoType(BaseModel):
+    type: int
