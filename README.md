@@ -101,7 +101,7 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
 ### TODOLIST  视频的URL
 
-几个问题：有几个需求应该是返回数个json，还有视频封面如何处理犹未可知
+几个问题：有几个需求应该是返回数个json，还有视频封面如何处理犹未可知，返回的video格式可以参考自动生成的接口文档
 
 1. 根据bv号返回视频的点赞：/video/like
 
@@ -122,7 +122,7 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
 3. 热门：/video/hot
 
-   暂定服务端返回video_like数最多的10个视频
+   暂定服务端返回video_like数最多的10个视频，返回值为video的List
    
 4. 视频名字：/video/name
 
@@ -142,7 +142,7 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    }
 
-   服务端返回暂定返回8个视频
+   服务端返回暂定随机返回8个视频，返回值为video的List
    
 6. 请求：/video/bv
 
@@ -161,6 +161,7 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    }
 
-   服务端这里应该返回数个json，暂定8个
+   服务端这里应该返回所有类型为cate的视频，返回值为video的List
 
-8.后端创建视频，接受前端url创建视频 done
+8.后端创建视频，接受前端url创建视频，接口还未实现
+
