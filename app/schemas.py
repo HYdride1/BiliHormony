@@ -36,7 +36,7 @@ class VideoCreate(VideoBase):
 
 
 class Video(VideoBase):
-    video_like: int = 0
+    like: int = 0
     coin: int = 0
     type: int = 1
 
@@ -56,3 +56,9 @@ class VideoResponse(BaseModel):
 
 class VideoType(BaseModel):
     type: int
+    
+class VideoLike(BaseModel):
+    like:int
+    
+class VideoCoin(BaseModel):
+    coin:int

@@ -28,6 +28,18 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
 `pip install passlib`
 
+
+
+部署：
+
+uvicorn main:app --reload
+
+在给出的网址后加上/docs即可查看自动生成的接口文档
+
+
+
+
+
 实现了用户的相关功能，建好了数据库serverside，并建好了表users
 
 完成了鉴权机制，密码加密存储
@@ -99,9 +111,9 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    }
 
-### TODOLIST  视频的URL
+###  视频的URL
 
-几个问题：有几个需求应该是返回数个json，还有视频封面如何处理犹未可知，返回的video格式可以参考自动生成的接口文档
+具体的请求和返回格式请参考生成的接口文档，还有视频封面如何处理犹未可知
 
 1. 根据bv号返回视频的点赞：/video/like
 
@@ -122,7 +134,7 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
 3. 热门：/video/hot
 
-   暂定服务端返回video_like数最多的10个视频，返回值为video的List
+   暂定服务端返回like数最多的10个视频，返回值为video的List
    
 4. 视频名字：/video/name
 
@@ -163,5 +175,5 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    服务端这里应该返回所有类型为cate的视频，返回值为video的List
 
-8.后端创建视频，接受前端url创建视频，接口还未实现
+TODO：运行日志？
 

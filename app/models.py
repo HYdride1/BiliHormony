@@ -15,6 +15,6 @@ class Video(Base):
     bv = Column(Integer, primary_key=True, index=True, nullable= False)
     name = Column(String(255),index=True, nullable=False)
     type = Column(Integer, nullable=False)
-    video_like = Column(Integer, nullable=False, default=0)
+    like = Column(Integer, nullable=False, default=0)
     coin = Column(Integer, nullable=False,default= 0 )
     url = Column(String(255), nullable=False)

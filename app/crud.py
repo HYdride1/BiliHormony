@@ -41,10 +41,19 @@ def get_video_by_bv(db: Session, bv: int):
     return db.query(models.Video).filter(models.Video.bv == bv).first()
 
 def get_hot_videos(db: Session):
-    return db.query(models.Video).order_by(desc(models.Video.video_like)).limit(10).all()
+    return db.query(models.Video).order_by(desc(models.Video.like)).limit(10).all()
 
 def get_random_videos_by_num(db: Session, num = 8):
     return db.query(models.Video).order_by(func.random()).limit(num).all()
 
 def get_videos_by_type(db: Session,type):
     return db.query(models.Video).filter(models.Video.type == type).all()
+
+def get_like_by_bv(db: Session, bv: int):
+    return db.query(models.Video.like).filter(models.Video.bv == bv).first()
+
+def get_coin_by_bv(db: Session, bv: int):
+    return db.query(models.Video.coin).filter(models.Video.bv == bv).first()
+
+def get_videos_by_name(db: Session, name: str):
+    return db.query(models.Video).filter(models.Video.name.like(f"%{name}%")).all()
