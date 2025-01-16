@@ -116,20 +116,14 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
    服务端返回的json格式为
    {
 
-   "bv": int
+   "coin": int
 
    }
 
 3. 热门：/video/hot
 
-   服务端返回的json格式为
-   {
-
-   "bvs": int[]
-
-   }
-   **注：**存疑
-
+   暂定服务端返回video_like数最多的10个视频
+   
 4. 视频名字：/video/name
 
    客户端发送的json格式为
@@ -138,14 +132,8 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    }
 
-   服务端返回的json格式为
-   {
-   "bv": int
-
-   "name": str
-
-   }，这里应该是根据name进行查询，把含有name的所有视频都返回吗
-
+   服务端这里应该是根据name进行查询，把含有name的所有视频都返回
+   
 5. 主页：/video/homepage
 
    客户端发送的json格式为
@@ -154,22 +142,16 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    }
 
-   服务端返回的json格式为
-   {
-   "bv": int
+   服务端返回暂定返回8个视频
+   
+6. 请求：/video/bv
 
-   "name": str
-
-   }
-
-6. 请求：/video/request
-
-   服务端返回的json格式为
+   客户端发送的json格式为
    {
 
    "bv": int
 
-   }
+   }根据bv返回视频
 
 7. 分类：/video/cate
 
@@ -179,10 +161,6 @@ https://medium.com/@iambkpl/setup-fastapi-and-sqlalchemy-mysql-986419dbffeb
 
    }
 
-   服务端返回的json格式为
-   {
-   "bvs": int[]
-
-   }
+   服务端这里应该返回数个json，暂定8个
 
 8.后端创建视频，接受前端url创建视频 done

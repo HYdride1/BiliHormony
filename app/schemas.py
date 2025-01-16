@@ -28,7 +28,7 @@ class VideoCreate(VideoBase):
     pass
 
 class Video(VideoBase):
-    like : int = 0
+    video_like : int = 0
     coin : int = 0
     type : int = 1
 

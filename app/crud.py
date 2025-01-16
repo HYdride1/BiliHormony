@@ -30,7 +30,7 @@ def get_user_details(db: Session, account: str):
 
 def create_video(db: Session, video:schemas.VideoCreate):
     db_video = models.Video(name=video.name,
-                          url=video.url,)
+                          url=video.url)
     db.add(db_video)
     db.commit()
     db.refresh(db_video)
