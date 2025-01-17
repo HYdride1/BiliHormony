@@ -64,32 +64,44 @@ def login_user(db: Session, form_data: schemas.UserBase):
     return {"account": user.account, "access_token": access_token, "token_type": "bearer"}
 
 
-def csv_to_json(csv_file, json_file):
-    # 打开 CSV 文件并读取数据
-    with open(csv_file, mode='r', encoding='utf-8') as infile:
-        # 使用 csv.DictReader 自动将 CSV 的每一行解析为字典
-        reader = csv.DictReader(infile)
+# def csv_to_json(csv_file, json_file):
+#     # 打开 CSV 文件并读取数据
+#     with open(csv_file, mode='r', encoding='utf-8') as infile:
+#         # 使用 csv.DictReader 自动将 CSV 的每一行解析为字典
+#         reader = csv.DictReader(infile)
 
-        # 将 CSV 数据转存到列表中
-        data = []
-        for row in reader:
-            data.append(row)
+#         # 将 CSV 数据转存到列表中
+#         data = []
+#         for row in reader:
+#             data.append(row)
 
-    # 将数据写入 JSON 文件
-    with open(json_file, mode='w', encoding='utf-8') as outfile:
-        json.dump(data, outfile, indent=4, ensure_ascii=False)
+#     # 将数据写入 JSON 文件
+#     with open(json_file, mode='w', encoding='utf-8') as outfile:
+#         json.dump(data, outfile, indent=4, ensure_ascii=False)
 
+
+# def update_hot_videos_once(db: Session):
+#     csv_to_json("B站TOP100.csv", "myjson")
+#     with open("myjson", mode='r', encoding='utf-8') as infile:
+#         data = json.load(infile)
+#     for item in data:
+#         video_info = item['视频标题']
+#         video_url = item['视频地址']
+#         cover_url = item['封面地址']
+#         video_schema = schemas.VideoCreate(url=video_url, name=video_info, cover_url=cover_url)
+#         crud.create_video(db, video_schema)
 
 def update_hot_videos_once(db: Session):
-    csv_to_json("B站TOP100.csv", "myjson")
-    with open("myjson", mode='r', encoding='utf-8') as infile:
+    with open("test.json", mode='r', encoding='utf-8') as infile:
         data = json.load(infile)
     for item in data:
-        video_info = item['视频标题']
-        video_url = item['视频地址']
-        cover_url = item['封面地址']
+        video_info = item['name']
+        video_url = item['url']
+        cover_url = item['cover_url']
         video_schema = schemas.VideoCreate(url=video_url, name=video_info, cover_url=cover_url)
         crud.create_video(db, video_schema)
+
+
 # 用户注册功能
 @app.post('/users/signup', response_model=schemas.User)
 def post_user(user: schemas.UserCreate, db: Session = Depends(get_db)):

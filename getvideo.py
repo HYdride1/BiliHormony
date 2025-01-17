@@ -25,6 +25,7 @@ data = json.loads(response.text)
 # 从响应数据中提取视频列表
 video_list = data['data']['list']
 
+print(data)
 # 初始化空列表以存储视频信息
 rank_list = []  # 排行
 title_list = []  # 视频标题
