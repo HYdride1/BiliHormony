@@ -18,6 +18,7 @@ from app.database import SessionLocal, engine
 from app.schemas import VideoResponse
 from app.security import Token
 import requests
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -98,7 +99,9 @@ def update_hot_videos_once(db: Session):
         video_info = item['name']
         video_url = item['url']
         cover_url = item['cover_url']
-        video_schema = schemas.VideoCreate(url=video_url, name=video_info, cover_url=cover_url)
+        like = item['like']
+        coin = item['coin']
+        video_schema = schemas.VideoCreate(url=video_url, name=video_info, cover_url=cover_url, like=like, coin=coin)
         crud.create_video(db, video_schema)
 
 
@@ -119,8 +122,8 @@ def post_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 async def login(form_data: schemas.UserBase, db: Session = Depends(get_db)):
     return login_user(db, form_data)
 
-# 登录逻辑
 
+# 登录逻辑
 
 
 # 发送我的界面中的数据
@@ -132,7 +135,7 @@ async def get_user_detail(user_detail_request: schemas.UserDetailRequest, db: Se
     return schemas.UserDetailResponse(**user_details)
 
 
-@app.post("/video/bv",response_model=VideoResponse)
+@app.post("/video/bv", response_model=VideoResponse)
 async def get_video_by_bv(video: schemas.VideoBv, db: Session = Depends(get_db)):
     target_video = crud.get_video_by_bv(db, bv=video.bv)
     if not target_video:
@@ -150,7 +153,7 @@ def get_hot_videos(db: Session = Depends(get_db)):
 
 
 @app.post("/video/homepage", response_model=List[VideoResponse])
-def get_homepage_videos(account:schemas.UserDetailRequest,db: Session = Depends(get_db)):
+def get_homepage_videos(account: schemas.UserDetailRequest, db: Session = Depends(get_db)):
     homepage_videos = crud.get_random_videos_by_num(db, num=8)
     if not homepage_videos:
         raise HTTPException(status_code=404, detail="Video not found")
@@ -164,19 +167,22 @@ def get_cate_videos(video: schemas.VideoType, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Video not found")
     return cate_videos
 
-@app.post("/video/like",response_model=schemas.VideoLike)
+
+@app.post("/video/like", response_model=schemas.VideoLike)
 def get_like_videos(video: schemas.VideoBv, db: Session = Depends(get_db)):
     like = crud.get_like_by_bv(db, video.bv)
     if not like:
         raise HTTPException(status_code=404, detail="Video not found")
     return like
 
-@app.post("/video/coin",response_model=schemas.VideoCoin)
+
+@app.post("/video/coin", response_model=schemas.VideoCoin)
 def get_coin_videos(video: schemas.VideoBv, db: Session = Depends(get_db)):
     coin = crud.get_coin_by_bv(db, video.bv)
     if not coin:
         raise HTTPException(status_code=404, detail="Video not found")
     return coin
+
 
 @app.post("/video/name", response_model=List[VideoResponse])
 def get_name_videos(name: schemas.VideoName, db: Session = Depends(get_db)):
@@ -184,6 +190,7 @@ def get_name_videos(name: schemas.VideoName, db: Session = Depends(get_db)):
     if not name_videos:
         raise HTTPException(status_code=404, detail="Video not found")
     return name_videos
+
 
 @app.on_event("startup")
 async def startup_event():

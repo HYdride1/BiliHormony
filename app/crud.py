@@ -35,7 +35,9 @@ def get_user_details(db: Session, account: str):
 def create_video(db: Session, video: schemas.VideoCreate):
     db_video = models.Video(name=video.name,
                             url=video.url,
-                            cover_url=video.cover_url)
+                            cover_url=video.cover_url,
+                            like=video.like,
+                            coin=video.coin)
     db.add(db_video)
     db.commit()
     db.refresh(db_video)

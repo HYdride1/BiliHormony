@@ -33,7 +33,8 @@ class VideoBase(BaseModel):
 
 
 class VideoCreate(VideoBase):
-    pass
+    like: int
+    coin: int
 
 
 class Video(VideoBase):
