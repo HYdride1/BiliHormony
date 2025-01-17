@@ -109,7 +109,7 @@ def get_hot_videos(db: Session = Depends(get_db)):
 
 
 @app.post("/video/homepage", response_model=List[VideoResponse])
-def get_homepage_videos(account:str,db: Session = Depends(get_db)):
+def get_homepage_videos(account:schemas.UserDetailRequest,db: Session = Depends(get_db)):
     homepage_videos = crud.get_random_videos_by_num(db, num=8)
     if not homepage_videos:
         raise HTTPException(status_code=404, detail="Video not found")
@@ -138,8 +138,8 @@ def get_coin_videos(video: schemas.VideoBv, db: Session = Depends(get_db)):
     return coin
 
 @app.post("/video/name", response_model=List[VideoResponse])
-def get_name_videos(name: str, db: Session = Depends(get_db)):
-    name_videos = crud.get_videos_by_name(db, name)
+def get_name_videos(name: schemas.VideoName, db: Session = Depends(get_db)):
+    name_videos = crud.get_videos_by_name(db, name.name)
     if not name_videos:
         raise HTTPException(status_code=404, detail="Video not found")
     return name_videos

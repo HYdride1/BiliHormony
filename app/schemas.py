@@ -58,9 +58,15 @@ class VideoResponse(BaseModel):
 
 class VideoType(BaseModel):
     type: int
-    
+
+
 class VideoLike(BaseModel):
-    like:int
-    
+    like: int
+
+
 class VideoCoin(BaseModel):
-    coin:int
+    coin: int
+
+
+class VideoName(BaseModel):
+    name: str
