@@ -51,8 +51,8 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(hours=1
 
 
 # 登录逻辑
-def login_user(db: Session, form_data: OAuth2PasswordRequestForm):
-    user = verify_user(db, form_data.username, form_data.password)
+def login_user(db: Session, form_data: schemas.UserBase):
+    user = verify_user(db, form_data.account, form_data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect username or password",
                             headers={"WWW-Authenticate": "Bearer"})
@@ -73,9 +73,13 @@ def post_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 # 用户登录功能
+# 用户登录功能
 @app.post("/users/login")
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login(form_data: schemas.UserBase, db: Session = Depends(get_db)):
     return login_user(db, form_data)
+
+# 登录逻辑
+
 
 
 # 发送我的界面中的数据

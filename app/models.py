@@ -18,3 +18,4 @@ class Video(Base):
     like = Column(Integer, nullable=False, default=0)
     coin = Column(Integer, nullable=False,default= 0 )
     url = Column(String(255), nullable=False)
+    cover_url = Column(String(255), nullable = False)

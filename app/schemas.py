@@ -29,6 +29,7 @@ class UserDetailResponse(BaseModel):
 class VideoBase(BaseModel):
     url: str
     name: str
+    cover_url: str
 
 
 class VideoCreate(VideoBase):
@@ -52,6 +53,7 @@ class VideoResponse(BaseModel):
     like: int
     coin: int
     url: str
+    cover_url: str
 
 
 class VideoType(BaseModel):
