@@ -14,8 +14,8 @@ class Video(Base):
     __tablename__ = "video"
     bv = Column(Integer, primary_key=True, index=True, nullable= False)
     name = Column(String(255),index=True, nullable=False)
-    type = Column(Integer, nullable=False)
-    like = Column(Integer, nullable=False, default=0)
+    type = Column(Integer, nullable=False, default= 1 )
+    like = Column(Integer, nullable=False, default= 0 )
     coin = Column(Integer, nullable=False,default= 0 )
     url = Column(String(255), nullable=False)
     cover_url = Column(String(255), nullable = False)
