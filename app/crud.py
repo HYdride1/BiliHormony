@@ -29,7 +29,8 @@ def get_user_details(db: Session, account: str):
     user = get_user_by_account(db, account=account)
     if not user:
         return None
-    return {"like": user.like, "coin": user.coin}
+    response = schemas.UserDetailResponse(like = user.like,coin = user.coin)
+    return response
 
 
 def create_video(db: Session, video: schemas.VideoCreate):

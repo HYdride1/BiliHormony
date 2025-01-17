@@ -1,28 +1,26 @@
+import random
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class UserBase(BaseModel):
     account: str
     password: str
 
-
 class UserCreate(UserBase):
-    pass
-
+    coin: int = 100  # 为 coin 字段设置默认值 100
+    like: int = Field(default_factory=lambda: random.choice([1, 2, 3, 4]), ge=1, le=4)  # 随机选择 1, 2, 3, 4 中的一个
 
 class User(UserBase):
     u_id: int
-    like: Optional[str] = ""
-    coin: int = 100  # 为 coin 字段设置默认值 100
-
+    like: Optional[int] = Field(None, ge=1, le=4)  # 限制 like 为 1, 2, 3, 4 中的一个
+    coin: int
 
 class UserDetailRequest(BaseModel):
     account: str
 
-
 class UserDetailResponse(BaseModel):
-    like: Optional[str] = ""  # 为 like 字段设置默认值 ""
+    like: Optional[int] = Field(None, ge=1, le=4)  # 限制 like 为 1, 2, 3, 4 中的一个
     coin: int
 
 

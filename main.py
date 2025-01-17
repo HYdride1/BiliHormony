@@ -132,7 +132,7 @@ async def get_user_detail(user_detail_request: schemas.UserDetailRequest, db: Se
     user_details = crud.get_user_details(db, account=user_detail_request.account)
     if not user_details:
         raise HTTPException(status_code=404, detail="User not found")
-    return schemas.UserDetailResponse(**user_details)
+    return user_details
 
 
 @app.post("/video/bv", response_model=VideoResponse)
