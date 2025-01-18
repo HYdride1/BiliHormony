@@ -1,5 +1,6 @@
 import csv
 import json
+import logging
 
 import uvicorn
 from fastapi import FastAPI, Depends, HTTPException
@@ -10,7 +11,6 @@ import jwt
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from passlib.hash import bcrypt
-
 from typing import List
 from app import models, schemas
 from app import crud, security
@@ -203,8 +203,13 @@ def update_video_like(video: schemas.VideoBv, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Video not found")
     return updated_video
 
+
+@app.on_event("startup")
+async def startup_event():
+    logger = logging.getLogger("uvicorn.access")
+    handler = logging.handlers.RotatingFileHandler("api.log", mode="a", maxBytes=100 * 1024, backupCount=3)
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+    logger.addHandler(handler)
 # 在第一次运行或者重置数据库之后的时候将注释去除,之后的所有运行将注释加上
-# @app.on_event("startup")
-# async def startup_event():
-#     with SessionLocal() as db:
-#         update_hot_videos_once(db)
+#   with SessionLocal() as db:
+#       update_hot_videos_once(db)
