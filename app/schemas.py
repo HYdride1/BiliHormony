@@ -1,26 +1,28 @@
-import random
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
     account: str
     password: str
 
+
 class UserCreate(UserBase):
-    coin: int = 100  # 为 coin 字段设置默认值 100
-    like: int = Field(default_factory=lambda: random.choice([1, 2, 3, 4]), ge=1, le=4)  # 随机选择 1, 2, 3, 4 中的一个
+    pass
+
 
 class User(UserBase):
     u_id: int
-    like: Optional[int] = Field(None, ge=1, le=4)  # 限制 like 为 1, 2, 3, 4 中的一个
-    coin: int
+    like: Optional[str] = ""
+    coin: int = 100  # 为 coin 字段设置默认值 100
+
 
 class UserDetailRequest(BaseModel):
     account: str
 
+
 class UserDetailResponse(BaseModel):
-    like: Optional[int] = Field(None, ge=1, le=4)  # 限制 like 为 1, 2, 3, 4 中的一个
+    like: Optional[str] = ""  # 为 like 字段设置默认值 ""
     coin: int
 
 
@@ -33,6 +35,7 @@ class VideoBase(BaseModel):
 class VideoCreate(VideoBase):
     like: int
     coin: int
+    type: int
 
 
 class Video(VideoBase):
@@ -56,7 +59,7 @@ class VideoResponse(BaseModel):
 
 
 class VideoType(BaseModel):
-    type: int
+    type: str
 
 
 class VideoLike(BaseModel):
@@ -69,3 +72,13 @@ class VideoCoin(BaseModel):
 
 class VideoName(BaseModel):
     name: str
+
+
+class UpdateCoinRequest(BaseModel):
+    account: str
+    bv: int
+
+class UpdateCoinResponse(BaseModel):
+    message: str
+    user: User
+    video: VideoResponse

@@ -1,16 +1,38 @@
-import random
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from app.database import Base
-class RandomLikeDefault:
+import random
+
+# class User(Base):
+#     __tablename__ = "users"
+#     u_id = Column(Integer, primary_key=True, index=True, nullable=False)
+#     account = Column(String(255), index=True, unique=True, nullable=False)
+#     password = Column(String(255), nullable=False)
+#     like = Column(String(255))
+#     coin = Column(Integer, nullable=False)
+    
+# class RandomLikeDefault:
+#     def __call__(self, context):
+#         return str(random.choice(["鬼畜类", "生活类", "美食类", "游戏类"]))
+
+# class User(Base):
+#     __tablename__ = "users"
+#     u_id = Column(Integer, primary_key=True, index=True, nullable=False)
+#     account = Column(String(255), index=True, unique=True, nullable=False)
+#     password = Column(String(255), nullable=False)
+#     like = Column(String(255), default=RandomLikeDefault())  # 使用自定义的默认值生成器
+#     coin = Column(Integer, nullable=False)
+
+class FixedLikeDefault:
     def __call__(self, context):
-        return str(random.choice([1, 2, 3, 4]))
+        return "30|30|30|30"  # 返回固定格式的占比字符串
+
 class User(Base):
     __tablename__ = "users"
     u_id = Column(Integer, primary_key=True, index=True, nullable=False)
     account = Column(String(255), index=True, unique=True, nullable=False)
     password = Column(String(255), nullable=False)
-    like = Column(String(255), default=RandomLikeDefault())
+    like = Column(String(255), default=FixedLikeDefault())  # 使用自定义的默认值生成器
     coin = Column(Integer, nullable=False)
 
 class Video(Base):

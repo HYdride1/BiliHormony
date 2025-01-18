@@ -18,7 +18,6 @@ from app.database import SessionLocal, engine
 from app.schemas import VideoResponse
 from app.security import Token
 import requests
-
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -101,7 +100,8 @@ def update_hot_videos_once(db: Session):
         cover_url = item['cover_url']
         like = item['like']
         coin = item['coin']
-        video_schema = schemas.VideoCreate(url=video_url, name=video_info, cover_url=cover_url, like=like, coin=coin)
+        type=item['type']
+        video_schema = schemas.VideoCreate(url=video_url, name=video_info, cover_url=cover_url, like=like, coin=coin,type=type)
         crud.create_video(db, video_schema)
 
 
@@ -122,20 +122,37 @@ def post_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 async def login(form_data: schemas.UserBase, db: Session = Depends(get_db)):
     return login_user(db, form_data)
 
-
 # 登录逻辑
 
 
+
 # 发送我的界面中的数据
-@app.post("/user/detail")
+# 发送我的界面中的数据
+@app.post("/user/detail", response_model=schemas.UserDetailResponse)
 async def get_user_detail(user_detail_request: schemas.UserDetailRequest, db: Session = Depends(get_db)):
     user_details = crud.get_user_details(db, account=user_detail_request.account)
     if not user_details:
         raise HTTPException(status_code=404, detail="User not found")
-    return user_details
+    
+    # 获取用户的 like 字段
+    likes = user_details["like"].split('|')
+    
+    # 定义类别和对应的索引
+    categories = ["鬼畜类", "美食类", "生活类", "游戏类"]
+    
+    # 计算总喜好值
+    total_likes = sum(map(int, likes))
+    
+    # 计算每个类别的百分比
+    percentages = [f"{category}:{int(like) / total_likes * 100:.2f}%" for category, like in zip(categories, likes)]
+    
+    # 生成返回字符串
+    result = ";".join(percentages)
+    
+    return {"like": result, "coin": user_details["coin"]}
 
 
-@app.post("/video/bv", response_model=VideoResponse)
+@app.post("/video/bv",response_model=VideoResponse)
 async def get_video_by_bv(video: schemas.VideoBv, db: Session = Depends(get_db)):
     target_video = crud.get_video_by_bv(db, bv=video.bv)
     if not target_video:
@@ -152,9 +169,10 @@ def get_hot_videos(db: Session = Depends(get_db)):
     return hot_videos
 
 
+# 获取首页视频
 @app.post("/video/homepage", response_model=List[VideoResponse])
 def get_homepage_videos(account: schemas.UserDetailRequest, db: Session = Depends(get_db)):
-    homepage_videos = crud.get_random_videos_by_num(db, num=8)
+    homepage_videos = crud.get_homepage_videos_by_like(db, account=account.account, num=8)
     if not homepage_videos:
         raise HTTPException(status_code=404, detail="Video not found")
     return homepage_videos
@@ -162,37 +180,57 @@ def get_homepage_videos(account: schemas.UserDetailRequest, db: Session = Depend
 
 @app.post("/video/cate", response_model=List[VideoResponse])
 def get_cate_videos(video: schemas.VideoType, db: Session = Depends(get_db)):
-    cate_videos = crud.get_videos_by_type(db, video.type)
+    # print(json.loads(video.type)["kind"])
+    cate_videos = crud.get_videos_by_type(db, json.loads(video.type)["kind"])
     if not cate_videos:
         raise HTTPException(status_code=404, detail="Video not found")
     return cate_videos
+    # return []
 
-
-@app.post("/video/like", response_model=schemas.VideoLike)
+@app.post("/video/like",response_model=schemas.VideoLike)
 def get_like_videos(video: schemas.VideoBv, db: Session = Depends(get_db)):
     like = crud.get_like_by_bv(db, video.bv)
     if not like:
         raise HTTPException(status_code=404, detail="Video not found")
     return like
 
-
-@app.post("/video/coin", response_model=schemas.VideoCoin)
+@app.post("/video/coin",response_model=schemas.VideoCoin)
 def get_coin_videos(video: schemas.VideoBv, db: Session = Depends(get_db)):
     coin = crud.get_coin_by_bv(db, video.bv)
     if not coin:
         raise HTTPException(status_code=404, detail="Video not found")
     return coin
 
-
 @app.post("/video/name", response_model=List[VideoResponse])
 def get_name_videos(name: schemas.VideoName, db: Session = Depends(get_db)):
+    print(name.name)
     name_videos = crud.get_videos_by_name(db, name.name)
     if not name_videos:
         raise HTTPException(status_code=404, detail="Video not found")
     return name_videos
 
+# 更新用户的硬币数和视频的硬币数
+@app.post("/video/getcoin", response_model=schemas.UpdateCoinResponse)
+def update_coin_and_like(update_coin_request: schemas.UpdateCoinRequest, db: Session = Depends(get_db)):
+    result = crud.update_coin_and_like(db, account=update_coin_request.account, bv=update_coin_request.bv)
+    if not result:
+        raise HTTPException(status_code=404, detail="User or Video not found")
+    return schemas.UpdateCoinResponse(
+        message="Update successful",
+        user=result["user"],
+        video=result["video"]
+    )
 
-@app.on_event("startup")
-async def startup_event():
-    with SessionLocal() as db:
-        update_hot_videos_once(db)
+# 更新视频的点赞数
+@app.post("/video/getlike", response_model=VideoResponse)
+def update_video_like(video: schemas.VideoBv, db: Session = Depends(get_db)):
+    updated_video = crud.increment_video_like(db, bv=video.bv)
+    if not updated_video:
+        raise HTTPException(status_code=404, detail="Video not found")
+    return updated_video
+
+# 在第一次运行或者重置数据库之后的时候将注释去除,之后的所有运行将注释加上
+# @app.on_event("startup")
+# async def startup_event():
+#     with SessionLocal() as db:
+#         update_hot_videos_once(db)
