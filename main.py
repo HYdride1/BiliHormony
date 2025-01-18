@@ -213,6 +213,8 @@ def init_config():
             db.add(new_config)
             db.commit()
             db.refresh(new_config)
+
+
 @app.on_event("startup")
 async def startup_event():
     init_config()
@@ -221,11 +223,16 @@ async def startup_event():
     handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
     logger.addHandler(handler)
 
-
     with SessionLocal() as db:
         config = db.query(models.Config).first()  # 获取配置表的第一条记录
         if config and not config.test_json_loaded:
+            print("##############################################################################")
+            is_to_execute = str(input(
+                "请您打开设置的数据库,运行下面指令:\n`alter table users convert to character set  utf8mb4`\n和`alter table video convert to character set  utf8mb4`,\n在运行完成以后,请输入y进行测试数据导入(y/n)"))
+            if is_to_execute != "y":
+                exit()
             # 如果未加载过test_json文件，执行加载操作
             update_hot_videos_once(db)  # 加载test_json文件
             config.test_json_loaded = True
             db.commit()  # 提交更新
+            print("加载成功")
