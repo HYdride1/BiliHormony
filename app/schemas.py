@@ -15,6 +15,8 @@ class User(UserBase):
     u_id: int
     like: Optional[str] = ""
     coin: int = 100  # 为 coin 字段设置默认值 100
+    class Config:
+        from_attributes = True  # 启用 from_orm 功能
 
 
 class UserDetailRequest(BaseModel):
@@ -56,6 +58,8 @@ class VideoResponse(BaseModel):
     coin: int
     url: str
     cover_url: str
+    class Config:
+        from_attributes = True  # 启用 from_orm 功能
 
 
 class VideoType(BaseModel):
