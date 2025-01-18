@@ -189,10 +189,12 @@ def update_coin_and_like(update_coin_request: schemas.UpdateCoinRequest, db: Ses
     result = crud.update_coin_and_like(db, account=update_coin_request.account, bv=update_coin_request.bv)
     if not result:
         raise HTTPException(status_code=404, detail="User or Video not found")
+    user_pydantic = schemas.User.from_orm(result["user"])
+    video_pydantic = schemas.VideoResponse.from_orm(result["video"])
     return schemas.UpdateCoinResponse(
         message="Update successful",
-        user=result["user"],
-        video=result["video"]
+        user=user_pydantic,
+        video=video_pydantic
     )
 
 # 更新视频的点赞数
