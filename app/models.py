@@ -44,3 +44,10 @@ class Video(Base):
     coin = Column(Integer, nullable=False,default= 0 )
     url = Column(String(255), nullable=False)
     cover_url = Column(String(255), nullable = False)
+
+
+class Config(Base):
+    __tablename__ = 'config'
+
+    id = Column(Integer, primary_key=True, index=True)  # 配置表的唯一ID
+    test_json_loaded = Column(Boolean, default=False)  # 用于标记是否加载过test_json文件

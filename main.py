@@ -203,13 +203,27 @@ def update_video_like(video: schemas.VideoBv, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Video not found")
     return updated_video
 
-
+def init_config():
+    with SessionLocal() as db:
+        config = db.query(models.Config).first()
+        if not config:  # 如果没有配置记录，则插入默认配置
+            new_config = models.Config(test_json_loaded=False)  # 初始时未加载
+            db.add(new_config)
+            db.commit()
+            db.refresh(new_config)
 @app.on_event("startup")
 async def startup_event():
+    init_config()
     logger = logging.getLogger("uvicorn.access")
     handler = logging.handlers.RotatingFileHandler("api.log", mode="a", maxBytes=100 * 1024, backupCount=3)
     handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
     logger.addHandler(handler)
-# 在第一次运行或者重置数据库之后的时候将注释去除,之后的所有运行将注释加上
-#   with SessionLocal() as db:
-#       update_hot_videos_once(db)
+
+
+    with SessionLocal() as db:
+        config = db.query(models.Config).first()  # 获取配置表的第一条记录
+        if config and not config.test_json_loaded:
+            # 如果未加载过test_json文件，执行加载操作
+            update_hot_videos_once(db)  # 加载test_json文件
+            config.test_json_loaded = True
+            db.commit()  # 提交更新
